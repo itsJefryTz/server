@@ -7,6 +7,8 @@ from rest_framework import status
 from .models import Order, Item
 from apps.services.models import Service, Variant
 
+from apps.core.utils import send_email_async
+
 # Create your views here.
 class OrderAPIView(APIView):
   
@@ -69,6 +71,11 @@ class OrderAPIView(APIView):
         order.items.set(created_items)
 
         # send email to user.
+        send_email_async(
+          request.data.get('email'),
+          'Confirmación de orden',
+          '<h1>Su orden ha sido creada exitosamente</h1>'
+        )
 
         return Response({
           'message': 'Orden creada exitosamente'
