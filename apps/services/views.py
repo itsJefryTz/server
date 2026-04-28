@@ -10,13 +10,14 @@ class ServiceAPIView(APIView):
   
   def get(self, request):
     service_id = request.query_params.get('id')
+    #
+    queryset = Service.objects.select_related('category').prefetch_related('variants')
     
     if service_id:
-      try:
-        service = Service.objects.get(id=service_id)
-        return Response(ServiceSerializer(service).data)
-      except Service.DoesNotExist:
+      service = queryset.filter(id=service_id).first()
+      if not service:
         return Response({"error": "service not found."}, status=status.HTTP_404_NOT_FOUND)
+      return Response(ServiceSerializer(service).data)
     else:
-      services = Service.objects.all()
+      services = queryset.all()
       return Response(ServiceSerializer(services, many=True).data, status=status.HTTP_200_OK)

@@ -25,10 +25,12 @@ admin.site.site_title = "La Feria del Gamer"
 admin.site.index_title = "Gestión de Objetos y demás"
 
 from apps.services.urls import services_urlpatterns
+from apps.orders.urls import orders_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('services/', include(services_urlpatterns)),
+    path('orders/', include(orders_urlpatterns)),
 ]
 
 if settings.DEBUG:

@@ -16,7 +16,7 @@ class VariantSerializer(serializers.ModelSerializer):
   
   class Meta:
     model = Variant
-    fields = ['id', 'available', 'name', 'price', 'delivery_type', 'delivery_method', 'date_updated', 'date_created']
+    fields = ['id', 'available', 'service', 'name', 'price', 'delivery_type', 'delivery_method', 'date_updated', 'date_created']
     
 class ServiceSerializer(serializers.ModelSerializer):
   category = CategorySerializer(read_only=True)
