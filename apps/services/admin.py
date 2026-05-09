@@ -35,7 +35,7 @@ class ServiceAdmin(admin.ModelAdmin):
 
 @admin.register(Variant)
 class VariantAdmin(admin.ModelAdmin):
-  list_display = ('id', 'available', 'get_service_name', 'name', 'price', 'delivery_type')
+  list_display = ('id', 'available', 'get_service_name', 'name', 'price', 'delivery_type', 'delivery_method')
   list_display_links = ('name',)
   list_filter = ('available', 'delivery_type', 'service__category')
   search_fields = ('name', 'service__name')

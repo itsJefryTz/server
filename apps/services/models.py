@@ -38,7 +38,7 @@ class Variant(models.Model):
   price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Precio')
   delivery_type_choices = [('manual', 'Manual'),]
   delivery_type = models.CharField(max_length=255, choices=delivery_type_choices, verbose_name='Tipo de entrega')
-  delivery_method_choices = [('id', 'ID'),]
+  delivery_method_choices = [('id', 'ID'), ('internal', 'Interno'),]
   delivery_method = models.CharField(max_length=255, choices=delivery_method_choices, verbose_name='Método de entrega')
   #
   date_created = models.DateTimeField(auto_now_add=True, verbose_name='Creada')

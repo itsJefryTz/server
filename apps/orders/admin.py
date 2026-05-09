@@ -2,36 +2,28 @@ from django.contrib import admin
 
 from .models import Item, Order
 
-# Register your models here.
-class ItemAdmin(admin.ModelAdmin):
-  list_display = ('id', 'service', 'variant', 'quantity', 'date_created')
-  list_filter = ('service', 'date_created')
-  search_fields = ('service__name', 'variant__name')
-  readonly_fields = [f.name for f in Item._meta.get_fields()]
-  
-  def has_add_permission(self, request):
-    return False
-
-  def has_change_permission(self, request, obj=None):
-    return False
-
-  def has_delete_permission(self, request, obj=None):
-    return False
-
-class OrderItemInline(admin.TabularInline):
-  model = Order.items.through
+class ItemInline(admin.StackedInline):
+  model = Item
   extra = 0
   verbose_name = "Item de la Orden"
   verbose_name_plural = "Items de la Orden"
-  
+  readonly_fields = ('item_summary',)
+  fields = ('item_summary', 'status')
+
   def has_add_permission(self, request, obj=None):
     return False
 
   def has_change_permission(self, request, obj=None):
-    return False
+    return True
 
   def has_delete_permission(self, request, obj=None):
     return False
+  
+  def get_actions(self, request):
+    actions = super().get_actions(request)
+    if 'delete_selected' in actions:
+      del actions['delete_selected']
+    return actions
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
@@ -42,11 +34,11 @@ class OrderAdmin(admin.ModelAdmin):
   list_display_links = ('id', 'phone', 'payment_method', 'reference')
   list_filter = ('status', 'type', 'payment_method', 'date_created')
   search_fields = ('email', 'reference', 'phone', 'id')
-  readonly_fields = ('type', 'payment_method', 'reference', 'phone', 'email', 'date_created', 'date_updated')
+  readonly_fields = ('type', 'payment_method', 'total_amount', 'total_amount_converted', 'reference', 'phone', 'email', 'date_created', 'date_updated')
   
   fieldsets = (
     ('Orden', { 'fields': ('type', 'status') }),
-    ('Detalles del Pago', { 'fields': ('payment_method', 'reference') }),
+    ('Detalles del Pago', { 'fields': ('total_amount', 'payment_method', 'total_amount_converted', 'reference') }),
     ('Información de Contacto', { 'fields': ('phone', 'email') }),
     ('Fechas de Registro', {
       'fields': ('date_created', 'date_updated'),
@@ -54,8 +46,7 @@ class OrderAdmin(admin.ModelAdmin):
     }),
   )
   
-  inlines = [OrderItemInline]
-  exclude = ('items',)
+  inlines = [ItemInline]
 
   def get_form(self, request, obj=None, **kwargs):
     form = super().get_form(request, obj, **kwargs)
