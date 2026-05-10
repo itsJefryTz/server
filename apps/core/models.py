@@ -10,7 +10,7 @@ class CurrencyRate(models.Model):
   
   class Meta:
     verbose_name = 'Tasa de Moneda'
-    verbose_name_plural = 'Tasas de Monedas'
+    verbose_name_plural = '1. Tasas de Monedas'
     
   def __str__(self):
     return f"{self.code} - {self.rate}"

@@ -24,14 +24,15 @@ admin.site.site_header = "Panel Administrativo - La Feria del Gamer"
 admin.site.site_title = "La Feria del Gamer"
 admin.site.index_title = "Gestión de Objetos y demás"
 
+from apps.core.urls import core_urlpatterns
 from apps.services.urls import services_urlpatterns
 from apps.orders.urls import orders_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('core/', include(core_urlpatterns)),
     path('services/', include(services_urlpatterns)),
     path('orders/', include(orders_urlpatterns)),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
