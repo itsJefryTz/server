@@ -1,5 +1,7 @@
 from decimal import Decimal
 from django.db import transaction
+from django.template.loader import render_to_string
+from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -36,8 +38,8 @@ class OrderAPIView(APIView):
       with transaction.atomic():
         currency_code = request.data.get('currency', 'US')
         try:
-          rate_obj = CurrencyRate.objects.get(code=currency_code)
-          rate = rate_obj.rate
+          currencyRate_obj = CurrencyRate.objects.get(code=currency_code)
+          rate = currencyRate_obj.rate
         except CurrencyRate.DoesNotExist:
           rate = Decimal('1.00')
 
@@ -75,13 +77,30 @@ class OrderAPIView(APIView):
               summary += f"- Pass: {credentials.get('password')}"
 
             Item.objects.create(order=order, item_summary=summary)
+            
+      # Email.
+      try:
+        list_items = []
+        
+        emailContext = {
+          "date": timezone.now().strftime("%d %b %Y"),
+          "id": order.id,
+          "total_items": len(items_data),
+          "items": list_items,
+          "payment_method": f"{request.data.get('payment_method')} ({request.data.get('currency')} - {rate})",
+          "currency_label": currencyRate_obj.label,
+          "total_amount": f"{total_amount * rate}"
+        }
+        html_content = render_to_string('email/orderInProcess.html', emailContext)
 
-      send_email_async(
-        request.data.get('email'),
-        'Confirmación de orden',
-        '<h1>Su orden ha sido creada exitosamente</h1>'
-      )
-
+        send_email_async(
+          request.data.get('email'),
+          'Confirmación de orden',
+          html_content
+        )
+      except Exception as e:
+        print(e)
+      
       return Response({'message': 'Orden creada exitosamente'}, status=status.HTTP_201_CREATED)
 
     except ValueError as e:

@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 class CurrencyRate(models.Model):
   code = models.CharField(unique=True, max_length=5, choices=[('VE', 'VE'), ('CO', 'CO'), ('US', 'US')], verbose_name='Código')
+  label = models.CharField(unique=True, max_length=5, choices=[('VES', 'VES'), ('COP', 'COP'), ('USD', 'USD')], verbose_name='Etiqueta')
   rate = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='Tasa')
   #
   date_created = models.DateTimeField(auto_now_add=True, verbose_name='Creada')

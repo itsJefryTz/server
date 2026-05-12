@@ -2,7 +2,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 import threading
 
-def _send_email_logic(to, subject, body):
+def _send_email_logic(to, subject, body):    
   try:
     send_mail(
       subject=subject,
