@@ -5,7 +5,7 @@ class Order(models.Model):
   type = models.CharField(max_length=255, choices=[('cart', 'Carrito'), ('single', ' Único')], verbose_name='Tipo de orden')
   status = models.CharField(max_length=255, choices=[('pending', 'Pendiente'), ('completed', 'Completada'), ('cancelled', 'Cancelada')], default='pending', verbose_name='Estado')
   payment_method = models.CharField(max_length=255, verbose_name='Método de pago')
-  total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='Monto total')
+  total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='Monto total (USD)')
   total_amount_converted = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='Monto total convertido')
   reference = models.CharField(max_length=255, verbose_name='Referencia')
   phone = models.CharField(max_length=255, verbose_name='Teléfono')

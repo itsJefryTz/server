@@ -69,11 +69,14 @@ class OrderAPIView(APIView):
               f"RESUMEN:\n- {service.name} - {variant.name}\n"
               f"- PRECIO: $US {variant.price}\n"
               f"---------------------------\n"
-              f"- ENTREGA: {'ID' if is_id else 'Correo'}: "
-              f"{credentials.get('id') if is_id else credentials.get('email')}\n"
+              f"- ENTREGA VÍA {'ID' if is_id else 'Interno'}:\n"
             )
             
-            if variant.delivery_method == 'internal':
+            if (variant.delivery_method == 'id'):
+              summary += f"- ID: {credentials.get('id')}\n"
+              summary += f"- Nombre del Jugador: {credentials.get('player_name') if credentials.get('player_name') else ''}\n"
+            elif variant.delivery_method == 'internal':
+              summary += f"- Email: {credentials.get('email')}"
               summary += f"- Pass: {credentials.get('password')}"
 
             Item.objects.create(order=order, item_summary=summary)
