@@ -27,12 +27,14 @@ admin.site.index_title = "Gestión de Objetos y demás"
 from apps.core.urls import core_urlpatterns
 from apps.services.urls import services_urlpatterns
 from apps.orders.urls import orders_urlpatterns
+from apps.payments.urls import payments_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('core/', include(core_urlpatterns)),
     path('services/', include(services_urlpatterns)),
     path('orders/', include(orders_urlpatterns)),
+    path('payments/', include(payments_urlpatterns)),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

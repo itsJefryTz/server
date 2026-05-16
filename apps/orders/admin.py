@@ -30,15 +30,15 @@ class OrderAdmin(admin.ModelAdmin):
   change_form_template = 'admin/orders/order/change_form.html'
   
   ordering = ('-id',)
-  list_display = ('id', 'type', 'status', 'phone', 'payment_method', 'reference', 'date_created')
-  list_display_links = ('id', 'phone', 'payment_method', 'reference')
-  list_filter = ('status', 'type', 'payment_method', 'date_created')
-  search_fields = ('email', 'reference', 'phone', 'id')
-  readonly_fields = ('type', 'payment_method', 'total_amount', 'total_amount_converted', 'reference', 'phone', 'email', 'date_created', 'date_updated')
+  list_display = ('id', 'type', 'status', 'payment', 'date_created')
+  list_display_links = ('id', 'payment')
+  list_filter = ('status', 'type', 'date_created')
+  search_fields = ('email', 'phone', 'id')
+  readonly_fields = ('type', 'payment', 'phone', 'email', 'date_created', 'date_updated')
   
   fieldsets = (
     ('Orden', { 'fields': ('type', 'status') }),
-    ('Detalles del Pago', { 'fields': ('total_amount', 'payment_method', 'total_amount_converted', 'reference') }),
+    ('Detalles del Pago', { 'fields': ('payment',) }),
     ('Información de Contacto', { 'fields': ('phone', 'email') }),
     ('Fechas de Registro', {
       'fields': ('date_created', 'date_updated'),

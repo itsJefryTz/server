@@ -1,13 +1,12 @@
 from django.db import models
 
+from apps.payments.models import Payment
+
 # Create your models here.  
 class Order(models.Model):
   type = models.CharField(max_length=255, choices=[('cart', 'Carrito'), ('single', ' Único')], verbose_name='Tipo de orden')
   status = models.CharField(max_length=255, choices=[('pending', 'Pendiente'), ('completed', 'Completada'), ('cancelled', 'Cancelada')], default='pending', verbose_name='Estado')
-  payment_method = models.CharField(max_length=255, verbose_name='Método de pago')
-  total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='Monto total (USD)')
-  total_amount_converted = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='Monto total convertido')
-  reference = models.CharField(max_length=255, verbose_name='Referencia')
+  payment = models.OneToOneField(Payment, on_delete=models.SET_NULL, null=True, related_name='payment', verbose_name='Pago')
   phone = models.CharField(max_length=255, verbose_name='Teléfono')
   email = models.EmailField(verbose_name='Correo electrónico')
   #
@@ -19,7 +18,7 @@ class Order(models.Model):
     verbose_name_plural = 'Órdenes'
   
   def __str__(self):
-    return str(self.id) + ' - ' + self.status + ' - ' + self.phone + ' - ' + self.reference
+    return str(self.id) + ' - ' + self.status + ' - ' + self.phone
   
 class Item(models.Model):
   order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', verbose_name='Orden')
